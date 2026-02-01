@@ -1,4 +1,7 @@
 package com.anshu.device_registration.dto;
 
-public class DeviceRegisterRequest {
+import java.util.UUID;
+
+public record DeviceRegisterRequest(UUID uuid, String name, String deviceType) {
+
 }

@@ -1,4 +1,6 @@
 package com.anshu.device_registration.dto;
 
-public class DeviceValidateRequest {
+import java.util.UUID;
+
+public record DeviceValidateRequest(UUID deviceUuid, String deviceSecret/* , String status */) {
 }
