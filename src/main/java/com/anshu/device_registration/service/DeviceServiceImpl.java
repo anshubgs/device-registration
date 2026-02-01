@@ -6,7 +6,8 @@ import java.util.UUID;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
+import com.anshu.device_registration.publisher.DeviceEventPublisher;
+import com.anshu.device_registration.event.DeviceRegisteredEvent;
 import com.anshu.device_registration.dto.DeviceRegisterRequest;
 import com.anshu.device_registration.dto.DeviceRegisterResponse;
 import com.anshu.device_registration.dto.DeviceValidateRequest;
@@ -25,9 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 public class DeviceServiceImpl implements DeviceService {
 
     private final DeviceRepository deviceRepository;
+    private final DeviceEventPublisher eventPublisher;
 
-    public DeviceServiceImpl(DeviceRepository deviceRepository) {
+    public DeviceServiceImpl(DeviceRepository deviceRepository, DeviceEventPublisher eventPublisher) {
         this.deviceRepository = deviceRepository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -49,6 +52,17 @@ public class DeviceServiceImpl implements DeviceService {
         deviceRepository.save(device);
 
         log.info("[DEVICE REGISTERED] uuid={}", device.getUuid());
+
+        // EVENT PUBLISH (NEW)
+        DeviceRegisteredEvent event = new DeviceRegisteredEvent(
+                device.getUuid(),
+                device.getName(),
+                device.getDeviceType(),
+                device.getSecret(),
+                device.getStatus(),
+                device.getCreatedAt().toInstant(ZoneOffset.UTC));
+
+        eventPublisher.publishEvent(event);
 
         return DeviceRegisterResponse.builder()
                 .deviceUuid(device.getUuid())
