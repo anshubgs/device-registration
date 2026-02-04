@@ -11,6 +11,6 @@ public class DeviceRegisterResponse {
 
     private UUID deviceUuid;
     private String deviceSecret;
-    private String status;
+    private DeviceStatus status;
 
 }

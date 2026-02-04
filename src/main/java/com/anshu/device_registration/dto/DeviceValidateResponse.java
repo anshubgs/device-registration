@@ -9,5 +9,5 @@ import lombok.Data;
 @Data
 public class DeviceValidateResponse {
     private UUID deviceUuid;
-    private String status;
+    private DeviceStatus status;
 }
