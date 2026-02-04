@@ -1,5 +1,7 @@
-# ---------- BUILD STAGE ----------
-FROM maven:3.9.9-eclipse-temurin-17 AS build
+# ===============================
+# BUILD STAGE (Java 21)
+# ===============================
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 WORKDIR /build
 
 COPY pom.xml .
@@ -8,8 +10,10 @@ RUN mvn -B -q dependency:go-offline
 COPY src ./src
 RUN mvn -B clean package -DskipTests
 
-# ---------- RUNTIME STAGE ----------
-FROM eclipse-temurin:17-jre-alpine
+# ===============================
+# RUNTIME STAGE (Java 21)
+# ===============================
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
 COPY --from=build /build/target/*.jar app.jar

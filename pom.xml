@@ -6,6 +6,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Spring Boot -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -19,12 +20,18 @@
     <name>device-registration</name>
     <description>Device Registration Service</description>
 
+    <!-- ===============================
+         PROPERTIES
+    =============================== -->
     <properties>
         <java.version>21</java.version>
+        <maven.compiler.release>21</maven.compiler.release>
         <spring-cloud-gcp.version>5.3.0</spring-cloud-gcp.version>
     </properties>
 
-    <!-- 🔹 GCP BOM (VERY IMPORTANT) -->
+    <!-- ===============================
+         GCP BOM
+    =============================== -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -37,15 +44,18 @@
         </dependencies>
     </dependencyManagement>
 
+    <!-- ===============================
+         DEPENDENCIES
+    =============================== -->
     <dependencies>
 
-        <!-- Web / REST -->
+        <!-- Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- JPA + Hibernate -->
+        <!-- JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -64,6 +74,12 @@
             <artifactId>flyway-core</artifactId>
         </dependency>
 
+        <!-- GCP Pub/Sub -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>spring-cloud-gcp-starter-pubsub</artifactId>
+        </dependency>
+
         <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -71,13 +87,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- ✅ GCP Pub/Sub (ONLY THIS IS NEEDED) -->
-        <dependency>
-            <groupId>com.google.cloud</groupId>
-            <artifactId>spring-cloud-gcp-starter-pubsub</artifactId>
-        </dependency>
-
-        <!-- Testing -->
+        <!-- Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -86,12 +96,28 @@
 
     </dependencies>
 
+    <!-- ===============================
+         BUILD
+    =============================== -->
     <build>
         <plugins>
+
+            <!-- Java 21 Compiler -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <release>21</release>
+                </configuration>
+            </plugin>
+
+            <!-- Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
         </plugins>
     </build>
 
