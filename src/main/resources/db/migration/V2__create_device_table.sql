@@ -2,6 +2,7 @@
 CREATE TABLE IF NOT EXISTS device.device (
     id BIGSERIAL PRIMARY KEY,
     uuid UUID NOT NULL UNIQUE,
+    user_id UUID NOT NULL,
     secret VARCHAR(100) NOT NULL,
     name VARCHAR(100),
     device_type VARCHAR(50),

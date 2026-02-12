@@ -10,6 +10,7 @@ import lombok.Data;
 public class DeviceRegisterResponse {
 
     private UUID deviceUuid;
+    private UUID userId;
     private String deviceSecret;
     private DeviceStatus status;
 

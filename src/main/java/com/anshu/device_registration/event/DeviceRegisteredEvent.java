@@ -18,5 +18,6 @@ public class DeviceRegisteredEvent {
     private String deviceSecret;
     private DeviceStatus status;
     private Instant registeredAt;
+    private UUID userUuid;
 
 }
