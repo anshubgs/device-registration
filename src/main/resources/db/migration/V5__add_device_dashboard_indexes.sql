@@ -2,9 +2,9 @@
 CREATE INDEX IF NOT EXISTS idx_device_uuid
 ON device.device (uuid);
 
--- ✅ NEW: Index on user_id
-CREATE INDEX IF NOT EXISTS idx_device_user_id
-ON device.device (user_id);
+-- ✅ Updated: Index on house_uuid for dashboard queries
+CREATE INDEX IF NOT EXISTS idx_device_house_uuid
+ON device.device (house_uuid);
 
 -- Index for device status (ACTIVE count)
 CREATE INDEX IF NOT EXISTS idx_device_status

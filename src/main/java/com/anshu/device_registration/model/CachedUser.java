@@ -24,6 +24,9 @@ public class CachedUser {
     @Column(nullable = false, unique = true, name = "user_uuid")
     private UUID uuid;
 
+    @Column(name = "house_uuid")
+    private UUID houseUuid;
+
     @Column(nullable = false, length = 50)
     private String role;
 
