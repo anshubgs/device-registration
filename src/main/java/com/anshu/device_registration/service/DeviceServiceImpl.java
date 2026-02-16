@@ -30,6 +30,7 @@ public class DeviceServiceImpl implements DeviceService {
     private final DeviceRepository deviceRepository;
     private final DeviceEventPublisher eventPublisher;
     private final CachedUserRepository cachedUserRepository;
+   // private final
 
     public DeviceServiceImpl(DeviceRepository deviceRepository, DeviceEventPublisher eventPublisher,CachedUserRepository cachedUserRepository) {
         this.deviceRepository = deviceRepository;
@@ -40,12 +41,34 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public DeviceRegisterResponse registerDevice(DeviceRegisterRequest request,UUID uuid, String userRole) {
 
-        if (deviceRepository.existsByUuid(request.uuid())) {
-            throw new DeviceAlreadyRegisteredException("Device already registered with UUID: " + request.uuid());
+//
+//        if (deviceRepository.existsByUuid(request.uuid())) {
+//            throw new DeviceAlreadyRegisteredException("Device already registered with UUID: " + request.uuid());
+//        }
+
+        // Fetch user
+        CachedUser user = cachedUserRepository.findByUuid(uuid).orElseThrow(
+                () ->      new UserNotFoundException("User not found with uuid: " + uuid));
+
+        // User must be ACTIVE
+        if (!"ACTIVE".equalsIgnoreCase(user.getStatus())) {
+            throw new AccessDeniedException("User is inactive");
+        }
+
+        //Role must match DB
+        if (!user.getRole().equalsIgnoreCase(userRole)) {
+            throw new RoleMismatchException("Role mismatch");
+        }
+
+        //Only ADMIN allowed
+        if (!"ADMIN".equalsIgnoreCase(userRole)) {
+            throw new AccessDeniedException("Only ADMIN can register devices");
         }
 
         Device device = Device.builder()
                 .uuid(UUID.randomUUID())
+                .userId(user.getUuid())
+                //.user_id(user.getUuid())
                 .secret(UUID.randomUUID().toString().replace("-", "").substring(0, 8))
                 .name(request.name())
                 .deviceType(request.deviceType())
@@ -60,16 +83,19 @@ public class DeviceServiceImpl implements DeviceService {
         // EVENT PUBLISH (NEW)
         DeviceRegisteredEvent event = new DeviceRegisteredEvent(
                 device.getUuid(),
+              //  device.getUser_id(),
                 device.getName(),
                 device.getDeviceType(),
                 device.getSecret(),
                 device.getStatus(),
-                device.getCreatedAt().toInstant(ZoneOffset.UTC));
+                device.getCreatedAt().toInstant(ZoneOffset.UTC),
+                device.getUserId());
 
         eventPublisher.publishDeviceRegistered(event);
 
         return DeviceRegisterResponse.builder()
                 .deviceUuid(device.getUuid())
+                .userId(device.getUserId())
                 .deviceSecret(device.getSecret())
                 .status(device.getStatus())
                 .build();

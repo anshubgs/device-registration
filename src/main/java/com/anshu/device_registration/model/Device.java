@@ -24,6 +24,9 @@ public class Device {
     @Column(nullable = false, unique = true)
     private UUID uuid;
 
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
+
     @Column(nullable = false)
     private String secret;
 
